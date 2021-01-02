@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import Board from 'react-trello';
 import firebase from 'firebase';
-import { Col, Row, Container, Form, Card, Button } from 'react-bootstrap';
+import { Col, Row, Container, Form, Card, Button, FormControl } from 'react-bootstrap';
 import '../assets/css/cards.css';
-import Swal from 'sweetalert2';
+import check from '../assets/images/check.svg';
+import check2 from '../assets/images/check-2.svg';
 
 class Cards extends Component {
 
@@ -12,10 +12,39 @@ class Cards extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            habitos: {
-                lanes: []
-            },
+            loading: false,
+            isEnabled: null,
             producto: '',
+            productos: [],
+            samples: [
+                "Sample 1",
+                "a word more larger qweqwe",
+                "another word pls",
+                "littler than",
+                "little",
+                "big",
+                "word",
+                "another fuck",
+                "yes",
+                "Sample 1",
+                "a word more larger qweqwe",
+                "another word pls",
+                "littler than",
+                "little",
+                "big",
+                "word",
+                "another fuck",
+                "yes",
+                "Sample 1",
+                "a word more larger qweqwe",
+                "another word pls",
+                "littler than",
+                "little",
+                "big",
+                "word",
+                "another fuck",
+                "yes",
+            ]
         }
     }
 
@@ -25,55 +54,132 @@ class Cards extends Component {
         })
     }
 
-    addCard = (e) => {
-        var producto = this.state.producto;
+    firstChar = (string) =>{
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
 
-        e.preventDefault();
-        if (producto === '')
-            return Swal.fire(
-                'No tan rápido',
-                'Falta información',
-                'warning'
-            )
+    guardarProducto = (e) => {
 
-        firebase.database().ref("/compras/").push().set({
-            producto: producto,
+        if (this.productoRef.current.value !== '') {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                var producto = this.firstChar(this.state.producto.toLowerCase());
+                firebase.database().ref("/compras/").push().set({
+                    nombre: producto,
+                    isComplete: false
+                }, () => {
+                    this.productoRef.current.value = '';
+                });
+            }
+        }
+    }
+
+    // ejemplo = () => {
+    //     //clearTimeout(this.state.isEnabled);
+    // }
+
+    // eliminarProducto = () => {
+    //     var aux = setTimeout(() => {
+    //         alert("si va a jalar");
+    //     }, 2000);
+    //     this.setState({isEnabled: aux});
+    // }
+
+    complete = (id, isComplete) => {
+        firebase.database().ref("/compras/" + id).update({
+            isComplete: !isComplete
         });
-
     }
 
     componentDidMount = () => {
         firebase.database().ref("/compras").on('value', snap => {
             var productos = [];
             snap.forEach(snapshot => {
-                console.log(snapshot.val());
+                productos.push({
+                    producto: snapshot.val(),
+                    id: snapshot.key
+                });
             });
+            this.setState({
+                productos: productos
+            });
+            setTimeout(() => {
+                this.setState({ loading: true });
+            }, 500);
         });
     }
 
     render() {
 
+        const { productos } = this.state;
+        const listaProductos = productos.map((producto, index) => {
+            return (
+                <Button onClick={() => this.complete(producto.id, producto.producto.isComplete)} className="button-card" key={index}>
+                    {producto.producto.nombre}
+                    {producto.producto.isComplete === true ? (
+                        <img alt="icono" className="check-card" src={check}></img>
+                    ) : (
+                            <img alt="icono" className="check-card" src={check2}></img>
+                        )}
+                </Button>
+            );
+        });
+
+        const samples = this.state.samples.map(sample => {
+            return (
+                <Button id="samplesId" className="sample-card">{sample}</Button>
+            );
+        });
+
         return (
             <div>
-                <Container fluid>
-                    <Row xs={1} md={1} lg={2}>
-                        <Col md={3} lg={3} className="container-card">
-                            <Card className="form-card">
-                                <Card.Title style={{ paddingTop: "2.5%" }} className="form-card">
-                                    Agregar Hábito
-                                </Card.Title>
-                                <Card.Body className="form-card">
+                {!this.state.loading ? (
+                    <Container className="container-card">
+                        <Row>
+                            <Col className="text-center">
+                                <h1 className="h1-card">PROPIT</h1>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <Form>
+                                    <Form.Group>
+                                        <Form.Control maxLength="27" onChange={this.handleChange} ref={this.productoRef} onKeyPress={this.guardarProducto} className="input-card" type="text" placeholder="Escribe aquí..." />
+                                    </Form.Group>
+                                </Form>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                {samples}
+                            </Col>
+                        </Row>
+                    </Container>
+                ) : (
+                        <Container className="container-card">
+                            <Row>
+                                <Col className="text-center">
+                                    <h1 className="h1-card">PROPIT</h1>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
                                     <Form>
                                         <Form.Group>
-                                            <Form.Control onChange={this.handleChange} ref={this.nombreRef} type="text" placeholder="Nombre del hábito" />
+                                            <Form.Control maxLength="27" onChange={this.handleChange} ref={this.productoRef} onKeyPress={this.guardarProducto} className="input-card" type="text" placeholder="Escribe aquí..." />
                                         </Form.Group>
                                     </Form>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                    </Row>
-                </Container>
-
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    {listaProductos &&
+                                        listaProductos
+                                    }
+                                </Col>
+                            </Row>
+                        </Container>
+                    )}
             </div>
         )
     }
