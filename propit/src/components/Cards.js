@@ -127,7 +127,7 @@ class Cards extends Component {
 
         const samples = this.state.samples.map(sample => {
             return (
-                <Button id="samplesId" className="sample-card">{sample}</Button>
+                <Button className="sample-card">{sample}</Button>
             );
         });
 
