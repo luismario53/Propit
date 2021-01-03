@@ -22,32 +22,33 @@ class Cards extends Component {
             productos: [],
             samples: [
                 "Sample 1",
-                "a word more larger qweqwe",
+                "a word",
                 "another word pls",
                 "littler than",
                 "little",
-                "big",
+                "big aserawe",
                 "word",
-                "another fuck",
-                "yes",
+                "another fuck wer wer",
+                "yesqweqweqwe",
                 "Sample 1",
-                "a word more larger qweqwe",
+                "a word more larger qweqwe qe",
                 "another word pls",
                 "littler than",
-                "little",
-                "big",
-                "word",
+                "little qe",
+                "big w",
+                "word qr rq trq",
                 "another fuck",
-                "yes",
                 "Sample 1",
-                "a word more larger qweqwe",
+                "a word",
                 "another word pls",
                 "littler than",
                 "little",
-                "big",
+                "big aserawe",
                 "word",
-                "another fuck",
-                "yes",
+                "another fuck wer wer",
+                "yesqweqweqwe",
+                "Sample 1",
+                "a word more larger qweqwe qe",
             ]
         }
     }
@@ -63,14 +64,14 @@ class Cards extends Component {
     }
 
     componentDidMount = () => {
-        firebase.database().ref("/compras").on('value', snap => {
+        firebase.database().ref("compras").orderByChild('isComplete').on('value', snap => {
             var productos = [];
             snap.forEach(snapshot => {
                 productos.push({
                     producto: snapshot.val(),
                     id: snapshot.key
                 });
-            });
+            })
             this.setState({
                 productos: productos
             });
@@ -105,9 +106,9 @@ class Cards extends Component {
         }
     }
 
-    complete = (id, isComplete) => {
-        firebase.database().ref("/compras/" + id).update({
-            isComplete: !isComplete
+    complete = (producto) => {
+        firebase.database().ref("/compras/" + producto.id).update({
+            isComplete: !producto.producto.isComplete
         });
     }
 
@@ -123,7 +124,7 @@ class Cards extends Component {
                     onMouseDown={() => this.handleButtonPress(producto.id)}
                     onMouseUp={this.handleButtonRelease}
                     onMouseLeave={this.handleButtonRelease}
-                    onClick={() => this.complete(producto.id, producto.producto.isComplete)}
+                    onClick={() => this.complete(producto)}
                     className="button-card" key={index}>
                     {producto.producto.nombre}
                     {producto.producto.isComplete === true ? (
@@ -151,7 +152,7 @@ class Cards extends Component {
                             </Col>
                         </Row>
                         <Row>
-                            <Col>
+                            <Col className="col-card">
                                 <Form>
                                     <Form.Group>
                                         <Form.Control maxLength="27" onChange={this.handleChange} ref={this.productoRef} onKeyPress={this.guardarProducto} className="input-card" type="text" placeholder="Escribe aquí..." />
@@ -160,7 +161,7 @@ class Cards extends Component {
                             </Col>
                         </Row>
                         <Row>
-                            <Col>
+                            <Col className="col-card">
                                 {samples}
                             </Col>
                         </Row>
@@ -173,7 +174,7 @@ class Cards extends Component {
                                 </Col>
                             </Row>
                             <Row>
-                                <Col>
+                                <Col className="col-card">
                                     <Form>
                                         <Form.Group>
                                             <Form.Control maxLength="27" onChange={this.handleChange} ref={this.productoRef} onKeyPress={this.guardarProducto} className="input-card" type="text" placeholder="Escribe aquí..." />
@@ -182,7 +183,7 @@ class Cards extends Component {
                                 </Col>
                             </Row>
                             <Row>
-                                <Col>
+                                <Col className="col-card">
                                     {listaProductos &&
                                         listaProductos
                                     }
