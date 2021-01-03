@@ -49,16 +49,16 @@
 
 @keyframes pulse {
     0%{
-        opacity: .75;
+        opacity: .60;
     }
     50%{
-        opacity: .50;
+        opacity: .40;
     }
     75%{
-        opacity: .30;
+        opacity: .20;
     }
     100%{
-        opacity: .10;
+        opacity: .0;
     }
 }
 

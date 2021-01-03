@@ -106,7 +106,6 @@ class Cards extends Component {
     }
 
     complete = (id, isComplete) => {
-        this.handleButtonRelease();
         firebase.database().ref("/compras/" + id).update({
             isComplete: !isComplete
         });
@@ -122,8 +121,9 @@ class Cards extends Component {
                     onTouchStart={() => this.handleButtonPress(producto.id)}
                     onTouchEnd={this.handleButtonRelease}
                     onMouseDown={() => this.handleButtonPress(producto.id)}
-                    onMouseUp={() => this.complete(producto.id, producto.producto.isComplete)}
+                    onMouseUp={this.handleButtonRelease}
                     onMouseLeave={this.handleButtonRelease}
+                    onClick={() => this.complete(producto.id, producto.producto.isComplete)}
                     className="button-card" key={index}>
                     {producto.producto.nombre}
                     {producto.producto.isComplete === true ? (
