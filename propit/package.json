@@ -2,7 +2,6 @@
   "name": "propit",
   "version": "0.1.0",
   "private": true,
-  "main": "public/electron.js",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.8",
     "@testing-library/react": "^11.2.2",

@@ -4,13 +4,17 @@ import { Col, Row, Container, Form, Card, Button, FormControl } from 'react-boot
 import '../assets/css/cards.css';
 import check from '../assets/images/check.svg';
 import check2 from '../assets/images/check-2.svg';
+import LongPress from './useLongPress';
 
 class Cards extends Component {
 
+    timeOut;
     productoRef = React.createRef();
 
     constructor(props) {
         super(props)
+        this.handleButtonPress = this.handleButtonPress.bind(this);
+        this.handleButtonRelease = this.handleButtonRelease.bind(this);
         this.state = {
             loading: false,
             isEnabled: null,
@@ -48,47 +52,14 @@ class Cards extends Component {
         }
     }
 
-    handleChange = () => {
-        this.setState({
-            producto: this.productoRef.current.value,
-        })
+    handleButtonPress(id) {
+        this.buttonPressTimer = setTimeout(() => {
+            firebase.database().ref("/compras/" + id).remove();
+        }, 500);
     }
 
-    firstChar = (string) =>{
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-
-    guardarProducto = (e) => {
-
-        if (this.productoRef.current.value !== '') {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                var producto = this.firstChar(this.state.producto.toLowerCase());
-                firebase.database().ref("/compras/").push().set({
-                    nombre: producto,
-                    isComplete: false
-                }, () => {
-                    this.productoRef.current.value = '';
-                });
-            }
-        }
-    }
-
-    // ejemplo = () => {
-    //     //clearTimeout(this.state.isEnabled);
-    // }
-
-    // eliminarProducto = () => {
-    //     var aux = setTimeout(() => {
-    //         alert("si va a jalar");
-    //     }, 2000);
-    //     this.setState({isEnabled: aux});
-    // }
-
-    complete = (id, isComplete) => {
-        firebase.database().ref("/compras/" + id).update({
-            isComplete: !isComplete
-        });
+    handleButtonRelease() {
+        clearTimeout(this.buttonPressTimer);
     }
 
     componentDidMount = () => {
@@ -109,12 +80,51 @@ class Cards extends Component {
         });
     }
 
+    handleChange = () => {
+        this.setState({
+            producto: this.productoRef.current.value,
+        })
+    }
+
+    firstChar = (string) => {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    guardarProducto = (e) => {
+        if (this.productoRef.current.value !== '') {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                var producto = this.firstChar(this.state.producto.toLowerCase());
+                firebase.database().ref("/compras/").push().set({
+                    nombre: producto,
+                    isComplete: false
+                }, () => {
+                    this.productoRef.current.value = '';
+                });
+            }
+        }
+    }
+
+    complete = (id, isComplete) => {
+        this.handleButtonRelease();
+        firebase.database().ref("/compras/" + id).update({
+            isComplete: !isComplete
+        });
+    }
+
     render() {
 
         const { productos } = this.state;
         const listaProductos = productos.map((producto, index) => {
             return (
-                <Button onClick={() => this.complete(producto.id, producto.producto.isComplete)} className="button-card" key={index}>
+                <Button
+                    id="ejemploBtn"
+                    onTouchStart={() => this.handleButtonPress(producto.id)}
+                    onTouchEnd={this.handleButtonRelease}
+                    onMouseDown={() => this.handleButtonPress(producto.id)}
+                    onMouseUp={() => this.complete(producto.id, producto.producto.isComplete)}
+                    onMouseLeave={this.handleButtonRelease}
+                    className="button-card" key={index}>
                     {producto.producto.nombre}
                     {producto.producto.isComplete === true ? (
                         <img alt="icono" className="check-card" src={check}></img>

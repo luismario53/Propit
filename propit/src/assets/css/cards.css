@@ -28,6 +28,7 @@
     padding-bottom: 1px;
     padding-left: 5px;
     width: 25px;
+    pointer-events: none;
 }
 
 .sample-card{
@@ -40,5 +41,24 @@
     border-color: transparent !important;
     color: #d1d1d1 !important;
     opacity: .50 ;
+}
+
+#ejemploBtn:active{
+    animation: pulse .5s;
+}
+
+@keyframes pulse {
+    0%{
+        opacity: .75;
+    }
+    50%{
+        opacity: .50;
+    }
+    75%{
+        opacity: .30;
+    }
+    100%{
+        opacity: .10;
+    }
 }
 
