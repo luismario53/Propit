@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import firebase from 'firebase/app';
-import 'firebase/database';
+import firebase from 'firebase';
+// import 'firebase/database';
 import { Col, Row, Container, Form, Button } from 'react-bootstrap';
 import '../assets/css/cards.css';
 import check from '../assets/images/check.svg';
@@ -78,6 +78,19 @@ class Cards extends Component {
     }
 
     componentDidMount = () => {
+        const messaging = firebase.messaging();
+        messaging.getToken({ vapidKey: 'BG5XEvepdpzIl0HZDTwNWAXaihQCkEcmEQPzBt6wr7yu5SQImduIRcBU-IW-IXTeBtta8D7T5BtrS4XcrFmKofk' }).then((currentToken) => {
+            if (currentToken) {
+                console.log(currentToken);
+            } else {
+                // Show permission request.
+                console.log('No registration token available. Request permission to generate one.');
+                // Show permission UI.
+            }
+        }).catch((err) => {
+            console.log('An error occurred while retrieving token. ', err);
+        });
+
         firebase.database().ref("compras").orderByChild('isComplete').on('value', snap => {
             var productos = [];
             snap.forEach(snapshot => {
@@ -127,7 +140,7 @@ class Cards extends Component {
     }
 
     render() {
-
+        
         const { productos } = this.state;
         const listaProductos = productos.map((producto, index) => {
             return (
@@ -205,6 +218,7 @@ class Cards extends Component {
                         </Container>
                     )}
             </div>
+
         )
     }
 }

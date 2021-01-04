@@ -1,3 +1,4 @@
+
 export const firebaseConfig = {
     apiKey: "AIzaSyA1MfA5344B718dVO_tnyZY99U3Y3MUVQQ",
     authDomain: "propit-88832.firebaseapp.com",
@@ -8,3 +9,4 @@ export const firebaseConfig = {
     appId: "1:399472338868:web:e325d01dde3ba4cf35f4e1",
     measurementId: "G-N4K17BV642"
 };
+

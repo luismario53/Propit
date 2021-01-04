@@ -12,6 +12,10 @@ function App() {
   return (
     <div className="App-header">
 
+      <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-analytics.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-messaging.js"></script>
+
       <link rel="preconnect" href="https://fonts.gstatic.com" />
       <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
 
