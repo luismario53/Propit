@@ -29,6 +29,11 @@
     border-color: transparent !important;
 }
 
+.button-card:focus{
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 .check-card{
     padding-bottom: 1px;
     padding-left: 5px;
@@ -48,8 +53,9 @@
     opacity: .50 ;
 }
 
-#ejemploBtn:active{
-    animation: pulse .5s;
+.button-card:active{
+    animation: pulse .5s forwards;
+    animation-iteration-count: 1
 }
 
 @keyframes pulse {

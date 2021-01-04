@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import firebase from 'firebase';
-import { Col, Row, Container, Form, Card, Button, FormControl } from 'react-bootstrap';
+import firebase from 'firebase/app';
+import 'firebase/database';
+import { Col, Row, Container, Form, Button } from 'react-bootstrap';
 import '../assets/css/cards.css';
 import check from '../assets/images/check.svg';
 import check2 from '../assets/images/check-2.svg';
-import LongPress from './useLongPress';
+import Swal from 'sweetalert2';
 
 class Cards extends Component {
 
@@ -53,9 +54,22 @@ class Cards extends Component {
         }
     }
 
-    handleButtonPress(id) {
+    handleButtonPress(e, id) {
         this.buttonPressTimer = setTimeout(() => {
-            firebase.database().ref("/compras/" + id).remove();
+            Swal.fire({
+                title: "<span className='no-selected'>Eliminando</span>",
+                text: '¿Eliminar producto?',
+                icon: 'warning',
+                showCancelButton: true,
+                cancelButtonText: 'Nooo',
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Si'
+            }).then((result) => {
+                if (result.value) {
+                    firebase.database().ref("/compras/" + id).remove();
+                }
+            })
         }, 500);
     }
 
@@ -118,10 +132,9 @@ class Cards extends Component {
         const listaProductos = productos.map((producto, index) => {
             return (
                 <Button
-                    id="ejemploBtn"
-                    onTouchStart={() => this.handleButtonPress(producto.id)}
+                    onTouchStart={(e) => this.handleButtonPress(e, producto.id)}
                     onTouchEnd={this.handleButtonRelease}
-                    onMouseDown={() => this.handleButtonPress(producto.id)}
+                    onMouseDown={(e) => this.handleButtonPress(e, producto.id)}
                     onMouseUp={this.handleButtonRelease}
                     onMouseLeave={this.handleButtonRelease}
                     onClick={() => this.complete(producto)}
@@ -136,9 +149,9 @@ class Cards extends Component {
             );
         });
 
-        const samples = this.state.samples.map(sample => {
+        const samples = this.state.samples.map((sample, index) => {
             return (
-                <Button className="sample-card">{sample}</Button>
+                <Button key={index} className="sample-card">{sample}</Button>
             );
         });
 
