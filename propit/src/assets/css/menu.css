@@ -1,10 +1,17 @@
 .container-class{
+  height: 100vh;
   padding-top: 2%;
+  /* display: flex;
+  flex-flow: column; */
+  padding-bottom: 2% !important;
+  display: block;
+  overflow-x: auto;
 }
 
 .card-class{
   background-color: #1DB954 !important;
   border-radius: 8px !important;
+  max-height: 50%;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
@@ -37,7 +44,7 @@
 
 .scrolltable{
   overflow-x: hidden;
-  max-height: 100vh;
+  max-height: 50%;
   border-radius: 8px;
 }
 
@@ -72,4 +79,14 @@
   vertical-align: middle !important;
   text-align: left;
   font-size: calc(.9em + .9vw);
+}
+
+.text-title{
+  font-size: calc(1em + 1vw);
+  color: #1DB954;
+}
+
+.text-subtitle{
+  font-size: calc(.75em + .75vw);
+  color: #1DB954;
 }

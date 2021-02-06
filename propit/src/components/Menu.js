@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Col, Row, Container, Form, Card, Button, Table } from 'react-bootstrap';
+import { Container, Form, Card, Table, Row } from 'react-bootstrap';
 import '../assets/css/menu.css';
 import { SpotifyAuth, Scopes } from 'react-spotify-auth';
-import { clientId, clientSecret, redirectUrl } from '../utils/spotify';
+import { clientId, redirectUrl } from '../utils/spotify';
 import SpotifyWebApi from 'spotify-web-api-node';
 import moment from 'moment';
 import momentDuration from 'moment-duration-format';
@@ -96,30 +96,34 @@ class Cards extends Component {
       <div>
         {localStorage.getItem('token') ? (
           <Container className="container-class" fluid>
-            <Card className="card-class">
-              <Card.Body>
-                <Form onSubmit={this.login}>
-                  <Form.Group>
-                    <h2>Spotify Queue Duration</h2>
-                  </Form.Group>
-                  <Form.Group>
-                    <h6>Duración: {this.state.duracion}</h6>
-                  </Form.Group>
-                  {/* <Form.Group>
+            <Row xs={1} sm={1}>
+              <Form onSubmit={this.login}>
+                <Form.Group>
+                  <h2 className="text-title">Spotify Queue Duration</h2>
+                </Form.Group>
+                <Form.Group>
+                  <h6 className="text-subtitle">Duración: {this.state.duracion}</h6>
+                </Form.Group>
+                {/* <Form.Group>
                     <Button onClick={() => { localStorage.removeItem('token'); }}>Remove Token</Button>
                   </Form.Group> */}
-                </Form>
-                <div className="scrolltable">
-                  <Table style={{ borderRadius: '8px' }} size="sm" variant="dark">
-                    <tbody>
-                      {items &&
-                        items
-                      }
-                    </tbody>
-                  </Table>
-                </div>
-              </Card.Body>
-            </Card>
+              </Form>
+            </Row>
+            <Row xs={1} sm={1}>
+              <Card className="card-class">
+                <Card.Body>
+                  <div className="scrolltable">
+                    <Table style={{ borderRadius: '8px' }} size="sm" variant="dark">
+                      <tbody>
+                        {items &&
+                          items
+                        }
+                      </tbody>
+                    </Table>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Row>
           </Container>
         ) : (
             <SpotifyAuth
