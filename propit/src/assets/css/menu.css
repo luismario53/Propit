@@ -9,6 +9,7 @@
 }
 
 .card-class{
+  display: block !important;
   background-color: #1DB954 !important;
   border-radius: 8px !important;
   max-height: 50%;

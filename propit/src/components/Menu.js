@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Form, Card, Table, Row } from 'react-bootstrap';
+import { Container, Form, Card, Table, Row, Button } from 'react-bootstrap';
 import '../assets/css/menu.css';
 import { SpotifyAuth, Scopes } from 'react-spotify-auth';
 import { clientId, redirectUrl } from '../utils/spotify';
@@ -19,7 +19,9 @@ class Cards extends Component {
       duracion_ms: 0,
       duracion: '',
       queue: [],
-      limit: 0
+      limit: 0,
+      searchedItems: [],
+      search: false
     }
   }
 
@@ -52,8 +54,9 @@ class Cards extends Component {
       offset: this.state.limit
     })
       .then(function (data) {
-        that.setState({ items: data.body.items, limit: that.state.limit + 50 });
-        console.log(data);
+        var items = that.state.items;
+        Array.prototype.push.apply(items, data.body.items);
+        that.setState({ searchedItems: items, items: items, limit: that.state.limit + 50 });
       }, function (error) {
         console.log('Something went wrong!', error);
       });
@@ -82,9 +85,24 @@ class Cards extends Component {
       });
   }
 
+  handleScroll = (e) => {
+    if ((e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight) && !this.state.search)
+      this.getTracks();
+  }
+
+  searchSongs = (e) => {
+    var { searchedItems } = this.state;
+    if (e.target.value.length >= 3) {
+      var result = searchedItems.filter(item => item.track.name.toLowerCase().startsWith(e.target.value.toLowerCase()) || item.track.name.toLowerCase().includes(e.target.value.toLowerCase()));
+      this.setState({ searchedItems: result, search: true });
+    } else if (e.target.value.length === 0) {
+      this.setState({ searchedItems: this.state.items, search: false });
+    }
+  }
+
   render() {
 
-    const items = this.state.items.map(item => {
+    const items = this.state.searchedItems.map(item => {
       return <tr id={item.track.id} key={item.track.id}>
         <td style={{ textAlign: 'left' }}><div style={{ fontSize: 'calc(.9em + .9vw)' }}>{item.track.name}</div> <div style={{ fontSize: 'calc(.6em + .6vw)', marginLeft: '1%' }}>{item.track.artists[0].name}</div></td>
         <td className="sub-text" onClick={() => this.addToQueue(item.track)} style={{ cursor: 'pointer' }}><i className="fa fa-plus-circle fa-w"></i></td>
@@ -95,7 +113,7 @@ class Cards extends Component {
     return (
       <div>
         {localStorage.getItem('token') ? (
-          <Container className="container-class" fluid>
+          <Container className="container-class" fluid onScroll={this.handleScroll}>
             <Row xs={1} sm={1}>
               <Form onSubmit={this.login}>
                 <Form.Group>
@@ -107,6 +125,9 @@ class Cards extends Component {
                 {/* <Form.Group>
                     <Button onClick={() => { localStorage.removeItem('token'); }}>Remove Token</Button>
                   </Form.Group> */}
+                <Form.Group>
+                  <Form.Control type="text" onKeyUp={this.searchSongs.bind(this)} />
+                </Form.Group>
               </Form>
             </Row>
             <Row xs={1} sm={1}>
@@ -121,6 +142,11 @@ class Cards extends Component {
                       </tbody>
                     </Table>
                   </div>
+                  {!this.state.search &&
+                    <div>
+                      <h4>Loading...</h4>
+                    </div>
+                  }
                 </Card.Body>
               </Card>
             </Row>
