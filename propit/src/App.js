@@ -1,14 +1,11 @@
 import './App.css';
-import Cards from './components/Cards';
-import firebase from 'firebase';
-import { firebaseConfig } from './utils/firebase';
-// Your web app's Firebase configuration
+import Menu from './components/Menu';
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+
 
 
 function App() {
+
   return (
     <div className="App">
       <link
@@ -17,7 +14,8 @@ function App() {
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
         crossOrigin="anonymous"
       />
-      <Cards />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
+      <Menu />
     </div>
   );
 }
