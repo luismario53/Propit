@@ -11,7 +11,10 @@ firebase.initializeApp(firebaseConfig);
 function App() {
   return (
     <div className="App-header">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+      <meta name="HandheldFriendly" content="true" />
 
+      <script src="https://kit.fontawesome.com/2508f54b33.js" crossOrigin="anonymous"></script>
       <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
       <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-analytics.js"></script>
       <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-messaging.js"></script>

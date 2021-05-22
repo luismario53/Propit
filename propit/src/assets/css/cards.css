@@ -1,3 +1,75 @@
+h1{margin: 0 !important;}
+.navbar-brand{
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.swal2-styled:focus{box-shadow: none !important; border: none !important;}
+.navbar-light .navbar-toggler{
+    border-color: #2d9f2f !important;
+}
+.color-nav{
+    background-color: #2d9f2f !important;
+}
+
+.menu-movil{
+    position: fixed;
+    background-color: transparent;
+    backdrop-filter: blur(15px);
+    filter: contrast(.9);
+    width: 100%;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 10;
+}
+
+.opciones{
+    display: flex;
+    flex-direction: column;
+    top: 100px;
+    height: 100vh;
+    width: 50%;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.grupo{
+    height: 50px !important;
+    border-radius: 10px !important;
+}
+
+.opciones Button{
+    height: 50px;
+    margin-bottom: 20px;
+    background-color: #37C339!important;
+    border: none !important;
+    border-radius: 10px;
+    box-shadow: 1px 1px black;
+    font-size: 22px;
+}
+
+.opciones Button:focus{
+    box-shadow: none !important;
+}
+
+.codigo Button{
+    margin-top: 10px;
+    background-color: #9A4EAE !important;
+}
+
+.codigo input{
+    text-transform: uppercase;
+}
+
+.cerrar-menu{
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    z-index: 10;
+    cursor: pointer;
+    max-width: 40px;
+}
+
 .container-card{
     padding-top: 2%;
 }
@@ -9,7 +81,12 @@
 
 .h1-card{
     font-weight: bold;
-    color: #37C339;
+    color: #2d9f2f;
+    font-size: 35px;
+}
+
+.container-fluid{
+    padding: 0 !important;
 }
 
 .input-card{
@@ -22,7 +99,8 @@
     font-family: 'Poppins', sans-serif;
     max-height: 40px;
     display: inline-block;
-    margin: 1%;
+    margin-right: 1%;
+    margin-bottom: 1%;
     max-width: 100%;
     background-color: #37C339 !important;
     border-radius: 12px !important;
@@ -56,20 +134,5 @@
 .button-card:active{
     animation: pulse .5s forwards;
     animation-iteration-count: 1
-}
-
-@keyframes pulse {
-    0%{
-        opacity: .60;
-    }
-    50%{
-        opacity: .40;
-    }
-    75%{
-        opacity: .20;
-    }
-    100%{
-        opacity: .0;
-    }
 }
 
