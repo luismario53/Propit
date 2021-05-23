@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
 // import 'firebase/database';
-import { Col, Row, Container, Form, Button, Navbar,FormControl} from 'react-bootstrap';
+import { Col, Row, Container, Form, Button, Navbar, FormControl } from 'react-bootstrap';
 import '../assets/css/cards.css';
 import check from '../assets/images/check.svg';
 import check2 from '../assets/images/check-2.svg';
 import close from '../assets/images/close.png';
+import flechaAbajo from '../assets/images/flecha-hacia-abajo.png';
 import Swal from 'sweetalert2';
 import random from 'randomstring';
 
@@ -20,6 +21,7 @@ class Cards extends Component {
     this.handleButtonRelease = this.handleButtonRelease.bind(this);
     this.codigoChange = this.codigoChange.bind(this);
     this.state = {
+      standAlone: true,
       codigo: '',
       navExpanded: false,
       loading: false,
@@ -85,6 +87,11 @@ class Cards extends Component {
 
   componentDidMount = () => {
 
+    if (!window.matchMedia('(display-mode: standalone)').matches) {
+      // Mostrar tutorial para agregar al inicio
+      this.setState({ standAlone: false });
+    }
+
     // Reiniciar localStorage
     // localStorage.removeItem('grupo');
 
@@ -97,9 +104,13 @@ class Cards extends Component {
       });
     }
 
+    if (localStorage.getItem('invitado') == null && localStorage.getItem('cache') != null)
+      this.setState({ codigo: localStorage.getItem('cache') });
+
     // Si el usuario tiene una invitacion
     var grupo = '';
     localStorage.getItem('invitado') == null ? grupo = localStorage.getItem('grupo') : grupo = localStorage.getItem('invitado');
+
 
     // Se trae la lista del usuario
     firebase.database().ref(grupo).orderByChild('isComplete').on('value', snap => {
@@ -215,6 +226,7 @@ class Cards extends Component {
       confirmButtonText: 'Si'
     }).then((result) => {
       if (result.value) {
+        localStorage.setItem('cache', localStorage.getItem('invitado'));
         localStorage.removeItem('invitado');
         this.componentDidMount();
         this.setState({
@@ -256,27 +268,28 @@ class Cards extends Component {
     return (
       <div>
         {this.state.navExpanded &&
-          <Container fluid className="menu-movil">
-            <img alt="imagen de cerrar" className="cerrar-menu" src={close} onClick={this.closeMenu}></img>
-            <Row>
-              <Col className="opciones">
-                {!localStorage.getItem('invitado') &&
-                  <Button onClick={this.compartirCodigo}>Invitar a alguien más</Button>
-                }
-                {localStorage.getItem('invitado') ? (
-                  <Button onClick={this.abandonarGrupo}>Abandonar lista</Button>
-                ) : (
-                  <div className="codigo text-right">
-                    <FormControl maxLength="5" value={this.state.codigo} onChange={this.codigoChange} className="grupo" type="text" placeholder="Código" />
-                    <Button onClick={this.validarCodigo}>Ingresar</Button>
-                  </div>
-                )}
-
-              </Col>
-            </Row>
-          </Container>
+          <div>
+            <Container fluid className="menu-movil">
+              <img alt="imagen de cerrar" className="cerrar-menu" src={close} onClick={this.closeMenu}></img>
+              <Row>
+                <Col className="opciones">
+                  {!localStorage.getItem('invitado') &&
+                    <Button onClick={this.compartirCodigo}>Invitar a alguien más</Button>
+                  }
+                  {localStorage.getItem('invitado') ? (
+                    <Button onClick={this.abandonarGrupo}>Abandonar lista</Button>
+                  ) : (
+                    <div className="codigo text-right">
+                      <FormControl maxLength="5" value={this.state.codigo} onChange={this.codigoChange} className="grupo" type="text" placeholder="Código" />
+                      <Button onClick={this.validarCodigo}>Ingresar</Button>
+                    </div>
+                  )}
+                </Col>
+              </Row>
+            </Container>
+          </div>
         }
-        <Container fluid>
+        <Container fluid className="menu-container">
           <Row>
             <Col>
               <Navbar className="color-nav" expand="lg" expanded={this.state.navExpanded}>
@@ -286,6 +299,16 @@ class Cards extends Component {
             </Col>
           </Row>
         </Container>
+        {!this.state.standAlone &&
+          <Container fluid className="tutorial">
+            <Row>
+              <Col xs={12} className="tutorial-1 text-center">
+                <h4>Haz click <br/> en <br/> agregar a inicio</h4>
+                <img src={flechaAbajo}></img>
+              </Col>
+            </Row>
+          </Container>
+        }
         {!this.state.loading ? (
           <Container className="container-card">
             <Row>
